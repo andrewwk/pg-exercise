@@ -1,14 +1,14 @@
 const pg       = require("pg");
-const settings = require("./settings"); // settings.json
+const settings = require("./settings"); // export db connection settings
 
-const q = process.argv[2];
+const params = [process.argv[2]]; // must be passed in as an array
 
+// using backticks allows for multiline string interpolation i.e. more readable query code block
 const query1 = `
   SELECT * FROM famous_people
-  WHERE LOWER(first_name) LIKE LOWER('%${q}%')
-  OR LOWER(last_name) LIKE LOWER('%${q}%')
-  `;
-
+  WHERE LOWER(first_name) LIKE LOWER(CONCAT('%',$1::text,'%'))
+  OR LOWER(last_name) LIKE LOWER(CONCAT('%',$1::text,'%'))
+`;
 
 const client = new pg.Client({
   user     : settings.user,
@@ -19,15 +19,23 @@ const client = new pg.Client({
   ssl      : settings.ssl
 });
 
-client.connect((err) => {
-  if (err) {
-    return console.error("Connection Error", err);
+const logErrorPrintResult = (err, result) => {
+  if (!result || err) {
+    console.log(err);
   }
-  client.query(query1, [], (err, result) => {
+  console.log(result);
+};
+
+const connect = (q, params, cb) => {
+  client.connect((err) => {
     if (err) {
-      return console.error("error running query", err);
+      cb(err);
     }
-    console.log("Your query returned: ", result.rows[0]); //output: 1
-    client.end();
+    client.query(q, params, (err, result) => {
+      cb(err, result.rows[0]);
+      client.end();
+    });
   });
-});
+};
+
+connect(query1, params, logErrorPrintResult);
