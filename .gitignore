@@ -3,6 +3,7 @@
 
 # Settings File for Connecting to Heroku DB
 settings.json
+knex-settings.json
 
 ### Node ###
 # Logs
@@ -54,5 +55,7 @@ jspm_packages
 # Yarn Integrity file
 .yarn-integrity
 
+#JSHint Linter Config File
+.jshintrc
 
 # End of https://www.gitignore.io/api/node
