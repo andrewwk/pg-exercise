@@ -1,7 +1,8 @@
 const pg           = require('pg');
 const settings     = require('./knex-settings'); // export db connection settings
 const knex         = require('knex')(settings);
-const params       = process.argv[2]; // must be passed in as an array
+const params       = [process.argv[2]]; // must be passed in as an array
+const params1       = [process.argv[2], process.argv[3], process.argv[4]]; // must be passed in as an array
 
 const search = (callback, params) => {
   return knex('famous_people')
@@ -36,7 +37,7 @@ const printQueryResult = (result) => {
   });
 };
 
-search(printQueryResult, params);
+// search(printQueryResult, params);
 
 // Alternative method with promises
 // const search2 = () => {
@@ -65,20 +66,42 @@ const p2 = {
   birthdate: '1964-02-09'
 };
 
-const dbInsert = (p) => {
+// const dbInsert = (p) => {
+//   return knex('famous_people')
+//     .insert(p)
+//     .then()
+//     .catch((err, result) => {
+//       if (err) {
+//         console.log(err);
+//         knex.destroy();
+//       } else {
+//         console.log("Successful insertion into the database", result);
+//         knex.destroy();
+//       }
+//     });
+// };
+
+const dbInsert = (person) => {
   return knex('famous_people')
-    .insert(p)
-    .then()
+    .insert({
+      first_name: person[0],
+      last_name: person[1],
+      birthdate: person[2]
+    })
+    .then(() => {
+      knex.destroy();
+    })
     .catch((err, result) => {
       if (err) {
         console.log(err);
-        destroy.knex();
+        knex.destroy();
       } else {
         console.log("Successful insertion into the database", result);
-        destroy.knex();
+        knex.destroy();
       }
     });
 };
 
-dbInsert(p1);
-dbInsert(p2);
+// dbInsert(p1);
+// dbInsert(p2);
+dbInsert(params1);
