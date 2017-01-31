@@ -66,22 +66,22 @@ const p2 = {
   birthdate: '1964-02-09'
 };
 
-// const dbInsert = (p) => {
-//   return knex('famous_people')
-//     .insert(p)
-//     .then()
-//     .catch((err, result) => {
-//       if (err) {
-//         console.log(err);
-//         knex.destroy();
-//       } else {
-//         console.log("Successful insertion into the database", result);
-//         knex.destroy();
-//       }
-//     });
-// };
+const dbInsert = (p) => {
+  return knex('famous_people')
+    .insert(p)
+    .then()
+    .catch((err, result) => {
+      if (err) {
+        console.log(err);
+        knex.destroy();
+      } else {
+        console.log("Successful insertion into the database", result);
+        knex.destroy();
+      }
+    });
+};
 
-const dbInsert = (person) => {
+const dbInsert2 = (person) => {
   return knex('famous_people')
     .insert({
       first_name: person[0],
@@ -104,4 +104,4 @@ const dbInsert = (person) => {
 
 // dbInsert(p1);
 // dbInsert(p2);
-dbInsert(params1);
+dbInsert2(params1);
